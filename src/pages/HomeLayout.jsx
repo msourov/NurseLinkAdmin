@@ -1,6 +1,7 @@
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import IconGenerator from "../components/IconGenerator";
 import { Outlet, useNavigate } from "react-router-dom";
+import api from "../actions/api";
 const { Header, Content, Sider } = Layout;
 const items = [
   {
@@ -63,19 +64,19 @@ const HomeLayout = () => {
       <Header
         style={{
           display: "flex",
+          justifyContent: "space-between",
           alignItems: "center",
           backgroundColor: "white",
         }}
       >
         <img src="./NurseCare.png" width="100px" margin="0" padding="0" />
+        <img src="./icons/login.png" width="20px" margin="0" padding="0" />
       </Header>
       <Layout>
         <Sider
           breakpoint="lg"
           collapsedWidth="0"
-          onBreakpoint={(broken) => {
-            console.log(broken);
-          }}
+          onBreakpoint={(broken) => {}}
           onCollapse={(collapsed, type) => {
             console.log(collapsed, type);
           }}

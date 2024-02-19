@@ -8,49 +8,92 @@ import Doctor from "./pages/Doctor";
 import Patient from "./pages/Patient";
 import PatientCallingRemote from "./pages/PatientCallingRemote";
 import HomeLayout from "./pages/HomeLayout";
+import LoginForm from "./components/LoginForm";
+import PrivateRoute from "./PrivateRoute";
 
 const router = createBrowserRouter([
+  {
+    index: true,
+    path: "/login",
+    element: <LoginForm />,
+  },
   {
     path: "/",
     element: <HomeLayout />,
     children: [
       {
+        path: "/login",
+        element: <LoginForm />,
+      },
+      {
         path: "/",
-        element: <Dashboard />,
+        element: (
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/floor",
-        element: <Floor />,
+        element: (
+          <PrivateRoute>
+            <Floor />
+          </PrivateRoute>
+        ),
         // errorElement: <ErrorPage />,
       },
       {
         path: "/ward",
-        element: <Ward_Cabin />,
+        element: (
+          <PrivateRoute>
+            <Ward_Cabin />
+          </PrivateRoute>
+        ),
         // errorElement: <ErrorPage />,
       },
       {
         path: "/nurse_station",
-        element: <NurseStation />,
+        element: (
+          <PrivateRoute>
+            <NurseStation />
+          </PrivateRoute>
+        ),
         // errorElement: <ErrorPage />,
       },
       {
         path: "/bed",
-        element: <Bed />,
+        element: (
+          <PrivateRoute>
+            <Bed />
+          </PrivateRoute>
+        ),
         // errorElement: <ErrorPage />,
       },
       {
         path: "/doctor",
-        element: <Doctor />,
+        element: (
+          <PrivateRoute>
+            <Doctor />
+          </PrivateRoute>
+        ),
         // errorElement: <ErrorPage />,
       },
       {
         path: "/patient",
-        element: <Patient />,
+        element: (
+          <PrivateRoute>
+            <Patient />
+          </PrivateRoute>
+        ),
         // errorElement: <ErrorPage />,
       },
       {
         path: "/patient_calling_remote",
-        element: <PatientCallingRemote />,
+        element: (
+          <PrivateRoute>
+            <PatientCallingRemote />
+          </PrivateRoute>
+        ),
         // errorElement: <ErrorPage />,
       },
     ],
