@@ -1,7 +1,6 @@
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import IconGenerator from "../components/IconGenerator";
 import { Outlet, useNavigate } from "react-router-dom";
-import api from "../actions/api";
 const { Header, Content, Sider } = Layout;
 const items = [
   {
@@ -78,7 +77,7 @@ const HomeLayout = () => {
           collapsedWidth="0"
           onBreakpoint={(broken) => {}}
           onCollapse={(collapsed, type) => {
-            console.log(collapsed, type);
+            // console.log(collapsed, type);
           }}
           width={200}
           style={{

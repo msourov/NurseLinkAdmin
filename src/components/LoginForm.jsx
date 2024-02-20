@@ -1,14 +1,16 @@
 import { Form, Input, Button, Checkbox } from "antd";
 import { useDispatch } from "react-redux";
-
-import { useNavigate } from "react-router-dom";
+import { loginReq } from "../features/authentication/loginSlice";
 
 function LoginForm() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  //   const onFinish = async (values) => {
-  //     await loginUser(values, dispatch, navigate);
-  //   };
+  const onFinish = async ({ user_id, password }) => {
+    try {
+      await dispatch(loginReq({ user_id, password }));
+    } catch (error) {
+      console.error("Error in dispatch:", error);
+    }
+  };
 
   const onFinishFailed = () => {
     console.error("form submission failed");
@@ -26,7 +28,7 @@ function LoginForm() {
           marginInline: "15%",
         }}
         initialValues={{ remember: true }}
-        // onFinish={onFinish}
+        onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
