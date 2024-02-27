@@ -16,7 +16,7 @@ export const loginReq = createAsyncThunk(
         email: user_id,
         password: password,
       });
-      console.log(response.data);
+
       return response.data;
     } catch (error) {
       console.log(error);
@@ -42,12 +42,11 @@ export const loginSlice = createSlice({
     builder
       .addCase(loginReq.pending, (state) => {
         state.status = "loading";
-      }) // Put void () or {} in arrow function. Because () returns a value which cause error with using immer but {} doesn't return anything
+      }) // Put void () or {} in arrow function. Because () returns a value which causes error with immer but {} doesn't return anything
       .addCase(loginReq.fulfilled, (state, action) => {
         state.status = "idle";
         state.token = action.payload.access_token;
         state.isLoggedIn = true;
-        // dispatch(navigate("/dashboard"));
       })
       .addCase(loginReq.rejected, (state, action) => {
         state.status = "error";

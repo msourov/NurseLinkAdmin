@@ -12,6 +12,12 @@ const items = [
     link: "/",
   },
   {
+    key: "floor",
+    icon: <IconGenerator style={{ marginBlock: "center" }} props={"floor"} />,
+    label: "Floor",
+    link: "/floor",
+  },
+  {
     key: "ward",
     icon: <IconGenerator style={{ marginBlock: "center" }} props={"ward"} />,
     label: "Ward/Cabin",

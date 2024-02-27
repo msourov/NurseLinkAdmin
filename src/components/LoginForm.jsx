@@ -7,6 +7,7 @@ function LoginForm() {
   const onFinish = async ({ user_id, password }) => {
     try {
       await dispatch(loginReq({ user_id, password }));
+      navigate("/");
     } catch (error) {
       console.error("Error in dispatch:", error);
     }
