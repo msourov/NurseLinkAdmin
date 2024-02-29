@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../actions/api";
-import { useSelector } from "react-redux";
 
 const initialState = {
   status: "idle",
