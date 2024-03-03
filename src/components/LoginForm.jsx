@@ -1,9 +1,11 @@
 import { Form, Input, Button, Checkbox } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { loginReq } from "../features/authentication/loginSlice";
+import { useNavigate } from "react-router-dom";
 
 function LoginForm() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const onFinish = async ({ user_id, password }) => {
     try {
       await dispatch(loginReq({ user_id, password }));

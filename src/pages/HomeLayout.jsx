@@ -1,6 +1,11 @@
-import { Breadcrumb, Layout, Menu, theme } from "antd";
+import { Breadcrumb, Button, Layout, Menu, theme } from "antd";
 import IconGenerator from "../components/IconGenerator";
 import { Outlet, useNavigate } from "react-router-dom";
+import Link from "antd/es/typography/Link";
+import { useDispatch } from "react-redux";
+import loginSlice, { logout } from "../features/authentication/loginSlice";
+import { CopyrightCircleOutlined } from "@ant-design/icons";
+import { Footer } from "antd/es/layout/layout";
 const { Header, Content, Sider } = Layout;
 const items = [
   {
@@ -56,6 +61,7 @@ const items = [
 
 const HomeLayout = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const handleMenuItemClick = (childItem) => {
     childItem.key !== "dashboard"
       ? navigate(`/${childItem.key}`)
@@ -75,7 +81,9 @@ const HomeLayout = () => {
         }}
       >
         <img src="./NurseCare.png" width="100px" margin="0" padding="0" />
-        <img src="./icons/login.png" width="20px" margin="0" padding="0" />
+        <Button onClick={() => dispatch(logout())}>
+          <img src="./icons/login.png" width="20px" margin="0" padding="0" />
+        </Button>
       </Header>
       <Layout>
         <Sider
@@ -108,7 +116,7 @@ const HomeLayout = () => {
             padding: "0 24px 24px",
           }}
         >
-          <Breadcrumb
+          {/* <Breadcrumb
             style={{
               margin: "16px 0",
             }}
@@ -116,7 +124,7 @@ const HomeLayout = () => {
             <Breadcrumb.Item>Home</Breadcrumb.Item>
             <Breadcrumb.Item>List</Breadcrumb.Item>
             <Breadcrumb.Item>App</Breadcrumb.Item>
-          </Breadcrumb>
+          </Breadcrumb> */}
           <Content
             style={{
               padding: 24,
@@ -131,6 +139,25 @@ const HomeLayout = () => {
           </Content>
         </Layout>
       </Layout>
+      <Footer
+        style={{
+          backgroundColor: "white",
+          color: "black",
+          justifyContent: "center",
+          padding: "12px",
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <CopyrightCircleOutlined
+          style={{ width: "16px", marginRight: "5px" }}
+        />
+        <span>
+          <p style={{ fontFamily: "sans-serif", fontWeight: "300" }}>
+            Copyright 2023. All rights reserved.
+          </p>
+        </span>
+      </Footer>
     </Layout>
   );
 };

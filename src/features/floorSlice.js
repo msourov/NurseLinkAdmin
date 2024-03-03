@@ -27,7 +27,8 @@ export const fetchFloor = createAsyncThunk(
 );
 export const createFloor = createAsyncThunk(
   "floorSlice/createFloor",
-  async (token, { name, floor_no, active }) => {
+  async ({ token, name, floor_no, active }) => {
+    // console.log(name, floor_no, active);
     try {
       const response = await api(token).post("v1/margaret/floor/create", {
         name: name,
@@ -76,7 +77,6 @@ export const updateFloor = createAsyncThunk(
 export const deleteFloor = createAsyncThunk(
   "floorSlice/deleteFloor",
   async ({ token, uid }) => {
-    console.log(uid);
     try {
       const response = await api(token).delete(
         `v1/margaret/floor/delete/${uid}`

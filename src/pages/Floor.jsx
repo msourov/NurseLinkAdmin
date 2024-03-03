@@ -1,4 +1,5 @@
 import {
+  Breadcrumb,
   Button,
   Input,
   Layout,
@@ -18,6 +19,7 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteFloor, fetchFloor, updateFloor } from "../features/floorSlice";
 import { EditFloor } from "../components/Forms";
+import Header from "../components/Header";
 
 const Floor = () => {
   const dispatch = useDispatch();
@@ -27,6 +29,7 @@ const Floor = () => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editUid, setEditUid] = useState(null);
   const [initialFormVal, setInitialFormVal] = useState({});
+  const [triggerRerender, setTriggerRerender] = useState(false);
   const searchInput = useRef(null);
   const token = useSelector((state) => state.login.token);
   // const store = useSelector((state) => state.floor);
@@ -39,6 +42,11 @@ const Floor = () => {
   const handleReset = (clearFilters) => {
     clearFilters();
     setSearchText("");
+  };
+
+  const renderTrigger = () => {
+    console.log("inside renderTrigger in floor.jsx");
+    setTriggerRerender((prev) => !prev);
   };
 
   const toggleEditModal = (bool) => {
@@ -56,7 +64,7 @@ const Floor = () => {
   const handleDelete = async (uid) => {
     // console.log(uid);
     dispatch(deleteFloor({ token, uid }));
-    // useSelector((state) => state.floor);
+    setTriggerRerender((prev) => !prev);
   };
 
   const onEditFloor = async (values) => {
@@ -171,12 +179,11 @@ const Floor = () => {
   useEffect(() => {
     const getFloorData = async () => {
       const response = await dispatch(fetchFloor(token));
-      // console.log(response);
       setFloors(response.payload.data);
     };
     // console.log("floors", floors);
     getFloorData();
-  }, [editModalOpen]);
+  }, [editModalOpen, triggerRerender]);
 
   const columns = [
     {
@@ -274,6 +281,12 @@ const Floor = () => {
   // console.log("floors", JSON.stringify(floorData, undefined, 2));
   return (
     <Layout>
+      <Header
+        headerRoutes={["Home", "Floor"]}
+        titles={["Floor", "Home"]}
+        page="floor"
+        triggerRender={renderTrigger}
+      />
       <Table
         columns={columns}
         dataSource={floorData}
