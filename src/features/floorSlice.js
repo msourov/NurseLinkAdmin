@@ -37,12 +37,13 @@ export const createFloor = createAsyncThunk(
       });
       if (response.status === 201) {
         // console.log(response);
+        message.success(response.data.message);
         return response.data;
       } else {
         throw new Error("Failed to create floor");
       }
     } catch (error) {
-      console.error(error);
+      message.error(error?.response?.data?.message);
       throw error;
     }
   }
@@ -85,7 +86,7 @@ export const deleteFloor = createAsyncThunk(
         message.success(response.data.message);
         return uid;
       } else {
-        throw new Error("Failed to update floor");
+        throw new Error("Failed to delete floor");
       }
     } catch (error) {
       console.error(error);

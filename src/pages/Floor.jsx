@@ -62,9 +62,18 @@ const Floor = () => {
   // const floorslice = useSelector((state) => state.floor);
   // console.log(floorslice);
   const handleDelete = async (uid) => {
-    // console.log(uid);
-    dispatch(deleteFloor({ token, uid }));
-    setTriggerRerender((prev) => !prev);
+    try {
+      // Dispatch the deleteFloor action
+      await dispatch(deleteFloor({ token, uid }));
+
+      // Update state to trigger re-render
+      setTriggerRerender((prev) => !prev);
+
+      // Optional: Retrieve the latest state using useSelector
+      useSelector((state) => state.floors);
+    } catch (error) {
+      console.error("Error deleting floor:", error);
+    }
   };
 
   const onEditFloor = async (values) => {
