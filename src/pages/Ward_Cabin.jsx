@@ -223,7 +223,7 @@ const Ward_Cabin = () => {
     };
     // console.log("floors", floors);
     getWardData();
-  }, [editModalOpen, triggerRerender]);
+  }, [editModalOpen, triggerRerender, token]);
 
   console.log("wards", wards);
 

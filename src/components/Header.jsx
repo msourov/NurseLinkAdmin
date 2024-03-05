@@ -65,13 +65,17 @@ const CreateModal = ({ page, triggerRerender }) => {
   useEffect(() => {
     const getFloorOptions = async () => {
       const res = await dispatch(floorHelper(token));
-      setFloorOptions(res.data);
+      setFloorOptions(res.payload.data);
     };
 
     getFloorOptions();
   }, [isModalOpen]);
 
-  // const prepareFloorOptions = floorOptions.map(item => ())
+  const prepareFloorOptions = floorOptions.map((item) => ({
+    value: item.uid,
+    label: `${item.name} - ${item.floor_no}`,
+  }));
+
   return (
     <>
       <Button
@@ -89,7 +93,12 @@ const CreateModal = ({ page, triggerRerender }) => {
         onCancel={() => setIsModalOpen(false)}
       >
         {page === "floor" && <CreateFloor onCloseModal={handleCloseModal} />}
-        {page === "ward" && <CreateWard onCloseModal={handleCloseModal} />}
+        {page === "ward" && (
+          <CreateWard
+            onCloseModal={handleCloseModal}
+            prepareFloorOptions={prepareFloorOptions}
+          />
+        )}
         {/* {page === "role" && <RoleForm onCloseModal={handleCloseModal} />}
         {page === "user" && <UserForm onCloseModal={handleCloseModal} />} */}
       </Modal>

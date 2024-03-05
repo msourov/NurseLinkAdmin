@@ -2,6 +2,7 @@ import { Button, Form, Input, Select, Switch } from "antd";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createFloor } from "../features/floorSlice";
+import { createWard } from "../features/wardSlice";
 
 export const CreateFloor = ({ onCloseModal }) => {
   const token = useSelector((state) => state.login.token);
@@ -180,7 +181,7 @@ export const EditFloor = ({ onEditFloor, initialValues }) => {
   );
 };
 
-export const CreateWard = ({ onCloseModal, floorOptions }) => {
+export const CreateWard = ({ onCloseModal, prepareFloorOptions }) => {
   const token = useSelector((state) => state.login.token);
   const [form] = Form.useForm();
   const dispatch = useDispatch();
@@ -193,8 +194,8 @@ export const CreateWard = ({ onCloseModal, floorOptions }) => {
       span: 16,
     },
   };
-  const onFinish = async ({ name, floor_no, active }) => {
-    const res = await dispatch(createFloor({ token, name, floor_no, active }));
+  const onFinish = async ({ name, floor_uid, active }) => {
+    const res = await dispatch(createWard({ token, name, floor_uid, active }));
     console.log("create floor res", res);
     onCloseModal();
   };
@@ -235,7 +236,7 @@ export const CreateWard = ({ onCloseModal, floorOptions }) => {
           },
         ]}
       >
-        <Select style={{ width: 120 }} options={floorOptions} />
+        <Select style={{ width: 120 }} options={prepareFloorOptions} />
       </Form.Item>
       <Form.Item name="active" label="Active">
         <Switch
