@@ -12,17 +12,19 @@ import {
   REGISTER,
 } from "redux-persist";
 import floorSlice from "./features/floorSlice";
+import wardSlice from "./features/wardSlice";
 
 const persistConfig = {
   key: "root",
   storage,
   // blacklist: ["", "", ] use blacklist for slices you don't want to persist
-  whitelist: ["login", "floor"],
+  whitelist: ["login", "floor", "ward"],
 };
 
 const rootReducer = combineReducers({
   login: loginSlice,
   floor: floorSlice,
+  ward: wardSlice,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

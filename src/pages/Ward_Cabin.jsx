@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Header from "../components/Header";
 import { fetchWard, updateWard } from "../features/wardSlice";
 import { EditWard } from "../components/Forms";
+// import FloorOptions from "../utils/FloorOptions";
 
 const Ward_Cabin = () => {
   const dispatch = useDispatch();
@@ -27,12 +28,12 @@ const Ward_Cabin = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [editUid, setEditUid] = useState(null);
+  const [editSl, setEditSl] = useState(null);
   const [initialFormVal, setInitialFormVal] = useState({});
   const [triggerRerender, setTriggerRerender] = useState(false);
   const searchInput = useRef(null);
   const token = useSelector((state) => state.login.token);
-
+  const wardss = useSelector((state) => state.wards);
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -225,15 +226,26 @@ const Ward_Cabin = () => {
     getWardData();
   }, [editModalOpen, triggerRerender, token]);
 
-  console.log("wards", wards);
-
+  // console.log("wards", wards);
+  const toEditWardData = (sl) => {
+    console.log(wards[sl]);
+    const ward = wards[sl];
+    const obj = {
+      uid: ward.uid,
+      floor_uid: ward.floor_uid,
+      uid: ward.uid,
+      name: ward.name,
+    };
+    return obj;
+  };
+  console.log("toEditWardData", toEditWardData(editSl));
   const prepareWardData = wards.map((item, ind) => ({
-    key: `ward${ind}`,
+    key: item.uid,
     sl: ind,
     floor_no: item.floor_no,
     name: item.name,
   }));
-
+  // console.log("prepareWardData", prepareWardData);
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -245,7 +257,7 @@ const Ward_Cabin = () => {
   };
 
   const renderTrigger = () => {
-    console.log("inside renderTrigger in ward.jsx");
+    // console.log("inside renderTrigger in ward.jsx");
     setTriggerRerender((prev) => !prev);
   };
 
@@ -253,10 +265,18 @@ const Ward_Cabin = () => {
     setEditModalOpen(bool);
   };
 
+  const prepareInitialFormValue = (floorNumber) => {
+    // const flooroptions = FloorOptions();
+    // console.log("FloorOptions", flooroptions);
+    // const res = FloorOptions().map(item => item.)
+  };
   const handleEditButton = async (record) => {
-    console.log("handleEdit", record);
-    setEditUid(record.uid);
-    setInitialFormVal(record);
+    // console.log("handleEdit", record);
+    console.log("state.wardss", wards);
+    // console.log("record.sl", record.sl);
+    setEditSl(record.sl);
+    prepareInitialFormValue(record.floor_no);
+    // setInitialFormVal(record);
     toggleEditModal(true);
   };
 
@@ -293,12 +313,12 @@ const Ward_Cabin = () => {
       <Table columns={columns} dataSource={prepareWardData} />
       {editModalOpen && (
         <Modal
-          key={`e-${editUid}`}
+          key={`e-${editSl}`}
           open={() => editModalOpen}
           onOk={() => toggleEditModal(false)}
           onCancel={() => toggleEditModal(false)}
         >
-          <EditWard onEditWard={onEditWard} initialVal={initialFormVal} />
+          <EditWard onCloseModal={onEditWard} initialVal={initialFormVal} />
         </Modal>
       )}
     </Layout>

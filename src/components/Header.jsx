@@ -6,7 +6,7 @@ import { Button, Modal } from "antd";
 import { useEffect, useState } from "react";
 import { CreateFloor, CreateWard } from "./Forms";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchWard, floorHelper, getWards } from "../features/wardSlice";
+import { fetchWard, getWards } from "../features/wardSlice";
 
 // import { RoleForm } from "../pages/user_management/RoleForm";
 // import { UserForm } from "../pages/user_management/UserForm";
@@ -55,26 +55,26 @@ function Header({
 
 const CreateModal = ({ page, triggerRerender }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [floorOptions, setFloorOptions] = useState([]);
-  const dispatch = useDispatch();
+  // const [floorOptions, setFloorOptions] = useState([]);
+  // const dispatch = useDispatch();
   const handleCloseModal = () => {
     setIsModalOpen(false);
     triggerRerender();
   };
-  const token = useSelector((state) => state.login.token);
-  useEffect(() => {
-    const getFloorOptions = async () => {
-      const res = await dispatch(floorHelper(token));
-      setFloorOptions(res.payload.data);
-    };
+  // const token = useSelector((state) => state.login.token);
+  // useEffect(() => {
+  //   const getFloorOptions = async () => {
+  //     const res = await dispatch(floorHelper(token));
+  //     setFloorOptions(res.payload.data);
+  //   };
 
-    getFloorOptions();
-  }, [isModalOpen]);
+  //   getFloorOptions();
+  // }, [isModalOpen]);
 
-  const prepareFloorOptions = floorOptions.map((item) => ({
-    value: item.uid,
-    label: `${item.name} - ${item.floor_no}`,
-  }));
+  // const prepareFloorOptions = floorOptions.map((item) => ({
+  //   value: item.uid,
+  //   label: `${item.name} - ${item.floor_no}`,
+  // }));
 
   return (
     <>
@@ -93,12 +93,7 @@ const CreateModal = ({ page, triggerRerender }) => {
         onCancel={() => setIsModalOpen(false)}
       >
         {page === "floor" && <CreateFloor onCloseModal={handleCloseModal} />}
-        {page === "ward" && (
-          <CreateWard
-            onCloseModal={handleCloseModal}
-            prepareFloorOptions={prepareFloorOptions}
-          />
-        )}
+        {page === "ward" && <CreateWard onCloseModal={handleCloseModal} />}
         {/* {page === "role" && <RoleForm onCloseModal={handleCloseModal} />}
         {page === "user" && <UserForm onCloseModal={handleCloseModal} />} */}
       </Modal>

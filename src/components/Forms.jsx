@@ -1,8 +1,9 @@
 import { Button, Form, Input, Select, Switch } from "antd";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createFloor } from "../features/floorSlice";
 import { createWard } from "../features/wardSlice";
+import FloorOptions from "../utils/FloorOptions";
 
 export const CreateFloor = ({ onCloseModal }) => {
   const token = useSelector((state) => state.login.token);
@@ -181,7 +182,8 @@ export const EditFloor = ({ onEditFloor, initialValues }) => {
   );
 };
 
-export const CreateWard = ({ onCloseModal, prepareFloorOptions }) => {
+export const CreateWard = ({ onCloseModal }) => {
+  const [floorOptions, setFloorOptions] = useState([]);
   const token = useSelector((state) => state.login.token);
   const [form] = Form.useForm();
   const dispatch = useDispatch();
@@ -194,6 +196,16 @@ export const CreateWard = ({ onCloseModal, prepareFloorOptions }) => {
       span: 16,
     },
   };
+
+  // useEffect(() => {
+  //   const fetchoptions = async () => {
+  //     const res = await FloorOptions();
+  //     setFloorOptions(res);
+  //   };
+
+  //   fetchoptions();
+  // }, [onCloseModal]);
+  const options = FloorOptions();
   const onFinish = async ({ name, floor_uid, active }) => {
     const res = await dispatch(createWard({ token, name, floor_uid, active }));
     console.log("create floor res", res);
@@ -236,7 +248,7 @@ export const CreateWard = ({ onCloseModal, prepareFloorOptions }) => {
           },
         ]}
       >
-        <Select style={{ width: 120 }} options={prepareFloorOptions} />
+        <Select style={{ width: 120 }} options={options} />
       </Form.Item>
       <Form.Item name="active" label="Active">
         <Switch
@@ -270,9 +282,11 @@ export const EditWard = ({ onEditWard, initialVal }) => {
       span: 16,
     },
   };
-  //   console.log("initialValues", initialValues);
+  console.log("initialValues", initialVal);
   //   initialValues = { initialValues };
-
+  console.log("initialVal", initialVal);
+  const floorOptions = FloorOptions();
+  console.log("floorOptions", floorOptions);
   useEffect(() => {
     initialVal &&
       form.setFieldsValue({
@@ -315,15 +329,15 @@ export const EditWard = ({ onEditWard, initialVal }) => {
         <Input />
       </Form.Item>
       <Form.Item
-        name={["floor_no"]}
-        label="Floor Number"
+        name={["floor_uid"]}
+        label="Floor Uid"
         rules={[
           {
             required: true,
           },
         ]}
       >
-        <Input />
+        <Select style={{ width: 120 }} options={floorOptions} />
       </Form.Item>
       <Form.Item name="active" label="Active">
         <Switch

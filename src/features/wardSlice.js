@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../actions/api";
 import { message } from "antd";
+import { useSelector } from "react-redux";
 
 const initialState = {
   wards: [],
@@ -35,8 +36,12 @@ export const createWard = createAsyncThunk(
         floor_uid: floor_uid,
         active: active,
       });
+
       if (response.status === 201) {
-        // console.log(response);
+        // console.log(
+        //   "selector wards",
+        //   useSelector((state) => state.wards)
+        // );
         message.success(response.data.message);
         return response.data;
       } else {
@@ -86,21 +91,6 @@ export const deleteWard = createAsyncThunk(
         return uid;
       } else {
         throw new Error("Failed to delete ward");
-      }
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  }
-);
-
-export const floorHelper = createAsyncThunk(
-  "wardSlice/floorHelper",
-  async (token) => {
-    try {
-      const response = await api(token).get("v1/margaret/floor/helper");
-      if (response.status === 200) {
-        return response.data;
       }
     } catch (error) {
       console.error(error);
@@ -163,14 +153,6 @@ export const wardSlice = createSlice({
         );
       })
       .addCase(deleteWard.rejected, (state, action) => {
-        state.status = "error";
-        state.error = action.error.message;
-      })
-      .addCase(floorHelper.pending, (state) => (state.status = "loading"))
-      .addCase(floorHelper.fulfilled, (state) => {
-        state.status = "idle";
-      })
-      .addCase(floorHelper.rejected, (state, action) => {
         state.status = "error";
         state.error = action.error.message;
       });
