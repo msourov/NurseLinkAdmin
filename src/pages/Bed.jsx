@@ -284,17 +284,18 @@ const Bed = () => {
   const wardOptions = WardOptions();
   const floorOptions = FloorOptions();
   const sortedBeds = [...beds].sort((a, b) => a.id - b.id);
-  // console.log("sortedBeds", sortedBeds);
   const bedData = sortedBeds?.map((item, index) => ({
     key: item.id,
     sl: index,
     bed: item.name,
     floor:
-      floorOptions &&
-      floorOptions.find((i) => i.value === item.floor_uid)["label"],
+      (floorOptions &&
+        floorOptions.find((i) => i.value === item.floor_uid)["label"]) ||
+      "",
     ward:
-      wardOptions &&
-      wardOptions.find((i) => i.value === item.ward_uid)["label"],
+      (wardOptions &&
+        wardOptions.find((i) => i.value === item.ward_uid)["label"]) ||
+      "",
     uid: item.uid,
   }));
   console.log("beds", JSON.stringify(bedData, undefined, 2));
