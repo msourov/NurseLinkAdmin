@@ -22,12 +22,6 @@ function Header({
   const triggerFn = () => {
     setTrigger((prev) => !prev);
     triggerRender();
-    console.log("inside triggerFn before if trigger = ", trigger);
-    // if (trigger) {
-    //   console.log("inside triggerFn after if  = ", trigger);
-
-    //   setTrigger(false);
-    // }
   };
   const navigate = useNavigate();
   const items = [
@@ -94,6 +88,7 @@ const CreateModal = ({ page, triggerRerender }) => {
       >
         {page === "floor" && <CreateFloor onCloseModal={handleCloseModal} />}
         {page === "ward" && <CreateWard onCloseModal={handleCloseModal} />}
+        {/* {page === "bed" && <CreateBed onCloseModal={handleCloseModal} />} */}
         {/* {page === "role" && <RoleForm onCloseModal={handleCloseModal} />}
         {page === "user" && <UserForm onCloseModal={handleCloseModal} />} */}
       </Modal>

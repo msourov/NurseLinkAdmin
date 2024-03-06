@@ -56,7 +56,7 @@ export const createWard = createAsyncThunk(
 
 export const updateWard = createAsyncThunk(
   "wardSlice/updateWard",
-  async ({ token, name, uid, floor_uid, active }) => {
+  async ({ token, name, uid, floor_uid, active, toggleEditModal }) => {
     try {
       const response = await api(token).put("v1/margaret/ward/update", {
         name,

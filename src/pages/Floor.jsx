@@ -45,7 +45,6 @@ const Floor = () => {
   };
 
   const renderTrigger = () => {
-    console.log("inside renderTrigger in floor.jsx");
     setTriggerRerender((prev) => !prev);
   };
 
@@ -59,17 +58,11 @@ const Floor = () => {
     setInitialFormVal(record);
     toggleEditModal(true);
   };
-  // const floorslice = useSelector((state) => state.floor);
-  // console.log(floorslice);
+
   const handleDelete = async (uid) => {
     try {
-      // Dispatch the deleteFloor action
       await dispatch(deleteFloor({ token, uid }));
-
-      // Update state to trigger re-render
       setTriggerRerender((prev) => !prev);
-
-      // Optional: Retrieve the latest state using useSelector
       useSelector((state) => state.floors);
     } catch (error) {
       console.error("Error deleting floor:", error);

@@ -19,7 +19,6 @@ export const CreateFloor = ({ onCloseModal }) => {
   };
   const onFinish = async ({ name, floor_no, active }) => {
     const res = await dispatch(createFloor({ token, name, floor_no, active }));
-    console.log("create floor res", res);
     onCloseModal();
   };
   return (
@@ -272,7 +271,7 @@ export const CreateWard = ({ onCloseModal }) => {
   );
 };
 
-export const EditWard = ({ onEditWard, initialVal }) => {
+export const EditWard = ({ onEditSubmit, initialVal }) => {
   const [form] = Form.useForm();
   const layout = {
     labelCol: {
@@ -282,23 +281,27 @@ export const EditWard = ({ onEditWard, initialVal }) => {
       span: 16,
     },
   };
-  console.log("initialValues", initialVal);
-  //   initialValues = { initialValues };
   console.log("initialVal", initialVal);
   const floorOptions = FloorOptions();
-  console.log("floorOptions", floorOptions);
+  // console.log("floorOptions", floorOptions);
   useEffect(() => {
     initialVal &&
       form.setFieldsValue({
         name: initialVal.name || "",
-        floor_no: initialVal.floor_no || "",
+        floor: initialVal.floor_uid || "",
         active: initialVal.active || false,
         uid: initialVal.uid || "",
       });
-  }, []);
+  }, [initialVal, form]);
 
   const onFinish = (values) => {
-    onEditWard(values);
+    const obj = {
+      name: values.name,
+      floor_uid: values.floor,
+      uid: values.uid,
+      active: values.active,
+    };
+    onEditSubmit(obj);
   };
   return (
     <Form
@@ -329,8 +332,8 @@ export const EditWard = ({ onEditWard, initialVal }) => {
         <Input />
       </Form.Item>
       <Form.Item
-        name={["floor_uid"]}
-        label="Floor Uid"
+        name={["floor"]}
+        label="Floor"
         rules={[
           {
             required: true,

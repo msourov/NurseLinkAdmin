@@ -18,7 +18,7 @@ import Highlighter from "react-highlight-words";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Header from "../components/Header";
-import { fetchWard, updateWard } from "../features/wardSlice";
+import { deleteWard, fetchWard, updateWard } from "../features/wardSlice";
 import { EditWard } from "../components/Forms";
 // import FloorOptions from "../utils/FloorOptions";
 
@@ -28,7 +28,7 @@ const Ward_Cabin = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [editSl, setEditSl] = useState(null);
+  const [toEditWardData, setToEditWardData] = useState({});
   const [initialFormVal, setInitialFormVal] = useState({});
   const [triggerRerender, setTriggerRerender] = useState(false);
   const searchInput = useRef(null);
@@ -188,7 +188,7 @@ const Ward_Cabin = () => {
             description="Are you sure?"
             okText="Yes"
             cancelText="No"
-            onConfirm={() => handleDelete(record.uid)}
+            onConfirm={() => handleDelete(record.key)}
           >
             <Button
               // onClick={() => handleDelete(record.uid)}
@@ -227,18 +227,18 @@ const Ward_Cabin = () => {
   }, [editModalOpen, triggerRerender, token]);
 
   // console.log("wards", wards);
-  const toEditWardData = (sl) => {
-    console.log(wards[sl]);
-    const ward = wards[sl];
-    const obj = {
-      uid: ward.uid,
-      floor_uid: ward.floor_uid,
-      uid: ward.uid,
-      name: ward.name,
-    };
-    return obj;
-  };
-  console.log("toEditWardData", toEditWardData(editSl));
+  // const toEditWardData = (sl) => {
+  //   console.log("wards, sl", wards, sl);
+  //   const ward = wards[sl];
+  //   const obj = {
+  //     uid: ward.uid,
+  //     floor_uid: ward.floor_uid,
+  //     uid: ward.uid,
+  //     name: ward.name,
+  //   };
+  //   // return obj;
+  // };
+  // console.log("toEditWardData", toEditWardData(editSl));
   const prepareWardData = wards.map((item, ind) => ({
     key: item.uid,
     sl: ind,
@@ -271,19 +271,24 @@ const Ward_Cabin = () => {
     // const res = FloorOptions().map(item => item.)
   };
   const handleEditButton = async (record) => {
-    // console.log("handleEdit", record);
-    console.log("state.wardss", wards);
-    // console.log("record.sl", record.sl);
-    setEditSl(record.sl);
     prepareInitialFormValue(record.floor_no);
-    // setInitialFormVal(record);
+    const ward = wards[record.sl];
+    const obj = {
+      floor_uid: ward.floor_uid,
+      uid: ward.uid,
+      name: ward.name,
+      active: ward.active,
+    };
+    setToEditWardData(obj);
+    // console.log("obj", obj);
     toggleEditModal(true);
   };
 
   const handleDelete = async (uid) => {
+    // console.log("delete uid", uid);
     try {
       // Dispatch the deleteFloor action
-      // await dispatch(delete({ token, uid }));
+      await dispatch(deleteWard({ token, uid }));
 
       // Update state to trigger re-render
       setTriggerRerender((prev) => !prev);
@@ -296,9 +301,8 @@ const Ward_Cabin = () => {
   };
 
   const onEditWard = async (values) => {
-    setInitialFormVal(values);
-    console.log("values", values);
-    // dispatch(updateWard({ token, values, toggleEditModal }));
+    // setInitialFormVal(values);
+    await dispatch(updateWard({ token, ...values, toggleEditModal }));
     // toggleEditModal(false);
   };
 
@@ -313,12 +317,12 @@ const Ward_Cabin = () => {
       <Table columns={columns} dataSource={prepareWardData} />
       {editModalOpen && (
         <Modal
-          key={`e-${editSl}`}
+          key={`e-${toEditWardData.uid}`}
           open={() => editModalOpen}
           onOk={() => toggleEditModal(false)}
           onCancel={() => toggleEditModal(false)}
         >
-          <EditWard onCloseModal={onEditWard} initialVal={initialFormVal} />
+          <EditWard onEditSubmit={onEditWard} initialVal={toEditWardData} />
         </Modal>
       )}
     </Layout>
