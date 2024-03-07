@@ -20,9 +20,10 @@ import { useDispatch, useSelector } from "react-redux";
 // import { deleteBed, fetchBed, updateBed } from "../features/bedSlice";
 // import { EditBed } from "../components/Forms";
 import Header from "../components/Header";
-import { fetchBed } from "../features/bedSlice";
+import { fetchBed, updateBed } from "../features/bedSlice";
 import WardOptions from "../utils/WardOptions";
 import FloorOptions from "../utils/FloorOptions";
+import { EditBed } from "../components/Forms";
 
 const Bed = () => {
   const dispatch = useDispatch();
@@ -36,6 +37,8 @@ const Bed = () => {
   const searchInput = useRef(null);
   const token = useSelector((state) => state.login.token);
   // const store = useSelector((state) => state.bed);
+  const wardOptions = WardOptions();
+  const floorOptions = FloorOptions();
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -55,10 +58,24 @@ const Bed = () => {
     setEditModalOpen(bool);
   };
 
+  const createInitialValues = (record) => {
+    console.log("beds inside edit", beds);
+    console.log(wardOptions);
+    const obj = {
+      floor_uid: floorOptions.find((item) => item.value === record.floor_uid)
+        ?.label,
+      ward_uid: wardOptions.find((item) => item.value === record.ward_uid)
+        ?.label,
+      name: record.bed,
+      active: record.active,
+    };
+    console.log("initial obj", obj);
+    setInitialFormVal(obj);
+  };
+
   const handleEditButton = async (record) => {
-    // console.log("handleEdit", record);
     setEditUid(record.uid);
-    setInitialFormVal(record);
+    createInitialValues(record);
     toggleEditModal(true);
   };
 
@@ -74,8 +91,9 @@ const Bed = () => {
 
   const onEditBed = async (values) => {
     // setInitialFormVal(values);
-    // console.log("values", values);
-    // dispatch(updateBed({ token, values, toggleEditModal }));
+
+    console.log("values", values);
+    dispatch(updateBed({ token, values, editUid, toggleEditModal }));
     // toggleEditModal(false);
   };
 
@@ -281,8 +299,9 @@ const Bed = () => {
       ),
     },
   ];
-  const wardOptions = WardOptions();
-  const floorOptions = FloorOptions();
+
+  // console.log("floorOptions", floorOptions);
+  // console.log("wardoptions", wardOptions);
   const sortedBeds = [...beds].sort((a, b) => a.id - b.id);
   const bedData = sortedBeds?.map((item, index) => ({
     key: item.id,
@@ -290,15 +309,18 @@ const Bed = () => {
     bed: item.name,
     floor:
       (floorOptions &&
-        floorOptions.find((i) => i.value === item.floor_uid)["label"]) ||
+        floorOptions.find((i) => i.value === item.floor_uid)?.label) ||
       "",
+    floor_uid: item.floor_uid,
     ward:
       (wardOptions &&
-        wardOptions.find((i) => i.value === item.ward_uid)["label"]) ||
+        wardOptions.find((i) => i.value === item.ward_uid)?.label) ||
       "",
+    ward_uid: item.ward_uid,
     uid: item.uid,
+    active: item.active,
   }));
-  console.log("beds", JSON.stringify(bedData, undefined, 2));
+  // console.log("beds", JSON.stringify(bedData, undefined, 2));
   return (
     <Layout>
       <Header
@@ -315,7 +337,7 @@ const Bed = () => {
           onOk={() => toggleEditModal(false)}
           onCancel={() => toggleEditModal(false)}
         >
-          {/* <EditBed onEditBed={onEditBed} initialValues={initialFormVal} /> */}
+          <EditBed onEditBed={onEditBed} initialVal={initialFormVal} />
         </Modal>
       )}
     </Layout>

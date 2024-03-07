@@ -13,6 +13,7 @@ import {
 } from "redux-persist";
 import floorSlice from "./features/floorSlice";
 import wardSlice from "./features/wardSlice";
+import bedSlice from "./features/bedSlice";
 
 const persistConfig = {
   key: "root",
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   login: loginSlice,
   floor: floorSlice,
   ward: wardSlice,
+  bed: bedSlice,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

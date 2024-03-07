@@ -29,11 +29,10 @@ const Ward_Cabin = () => {
   const [searchedColumn, setSearchedColumn] = useState("");
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [toEditWardData, setToEditWardData] = useState({});
-  const [initialFormVal, setInitialFormVal] = useState({});
   const [triggerRerender, setTriggerRerender] = useState(false);
   const searchInput = useRef(null);
   const token = useSelector((state) => state.login.token);
-  const wardss = useSelector((state) => state.wards);
+  // const wardss = useSelector((state) => state.wards);
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
