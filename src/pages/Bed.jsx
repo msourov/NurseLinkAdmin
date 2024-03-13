@@ -1,5 +1,4 @@
 import {
-  Breadcrumb,
   Button,
   Input,
   Layout,
@@ -10,6 +9,7 @@ import {
   Tag,
 } from "antd";
 import {
+  CheckOutlined,
   DeleteOutlined,
   EditOutlined,
   SearchOutlined,
@@ -20,10 +20,16 @@ import { useDispatch, useSelector } from "react-redux";
 // import { deleteBed, fetchBed, updateBed } from "../features/bedSlice";
 // import { EditBed } from "../components/Forms";
 import Header from "../components/Header";
-import { fetchBed, updateBed } from "../features/bedSlice";
+import { deleteBed, fetchBed, updateBed } from "../features/bedSlice";
 import WardOptions from "../utils/WardOptions";
 import FloorOptions from "../utils/FloorOptions";
-import { EditBed } from "../components/Forms";
+import { AssignToBed, EditBed } from "../components/Forms";
+import {
+  AssignDoctor,
+  AssignNurse,
+  AssignPatient,
+  AssignRemote,
+} from "../actions/AssignToBed";
 
 const Bed = () => {
   const dispatch = useDispatch();
@@ -31,9 +37,16 @@ const Bed = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [assignModalOpen, setAssignModalOpen] = useState(false);
   const [editUid, setEditUid] = useState(null);
   const [initialFormVal, setInitialFormVal] = useState({});
   const [triggerRerender, setTriggerRerender] = useState(false);
+  const [assignInitials, setAssignInitials] = useState({
+    assignedPatient: {},
+    assignedDoctor: {},
+    assignedNurse: {},
+    assignedRemote: {},
+  });
   const searchInput = useRef(null);
   const token = useSelector((state) => state.login.token);
   // const store = useSelector((state) => state.bed);
@@ -51,6 +64,7 @@ const Bed = () => {
   };
 
   const renderTrigger = () => {
+    // This is to cause rerender after an operation.
     setTriggerRerender((prev) => !prev);
   };
 
@@ -58,14 +72,19 @@ const Bed = () => {
     setEditModalOpen(bool);
   };
 
+  // This function prepopulates the bed edit form with previous values.
   const createInitialValues = (record) => {
-    console.log("beds inside edit", beds);
-    console.log(wardOptions);
+    // console.log("beds inside edit", beds);
+    console.log("wardOptions", JSON.stringify(wardOptions, undefined, 2));
+    const { value: floorValue, label: floorLabel } = floorOptions.find(
+      (item) => item.value === record.floor_uid
+    );
+    const { value: wardValue, label: wardLabel } = wardOptions.find(
+      (item) => item.value === record.ward_uid
+    );
     const obj = {
-      floor_uid: floorOptions.find((item) => item.value === record.floor_uid)
-        ?.label,
-      ward_uid: wardOptions.find((item) => item.value === record.ward_uid)
-        ?.label,
+      floor: { floorLabel, floorValue },
+      ward: { wardLabel, wardValue },
       name: record.bed,
       active: record.active,
     };
@@ -73,15 +92,22 @@ const Bed = () => {
     setInitialFormVal(obj);
   };
 
+  // record contains all the information about the bed clicked to edit.
   const handleEditButton = async (record) => {
     setEditUid(record.uid);
     createInitialValues(record);
     toggleEditModal(true);
   };
 
+  const handleAssignButton = async (record) => {
+    setEditUid(record.uid);
+    setAssignModalOpen(true);
+  };
+
   const handleDelete = async (uid) => {
+    console.log(uid);
     try {
-      // await dispatch(deleteBed({ token, uid }));
+      await dispatch(deleteBed({ token, uid }));
       setTriggerRerender((prev) => !prev);
       useSelector((state) => state.beds);
     } catch (error) {
@@ -90,13 +116,46 @@ const Bed = () => {
   };
 
   const onEditBed = async (values) => {
-    // setInitialFormVal(values);
-
-    console.log("values", values);
     dispatch(updateBed({ token, values, editUid, toggleEditModal }));
     // toggleEditModal(false);
   };
 
+  const onAssignPatient = async (patient_uid) => {
+    setAssignModalOpen(false);
+    setAssignInitials({
+      ...assignInitials,
+      assignedPatient: { uid: editUid, patient_uid: patient_uid },
+    });
+    const res = await AssignPatient({ token, editUid, patient_uid });
+    // console.log(res.data);
+  };
+  const onAssignDoctor = async (doctor_uid) => {
+    setAssignModalOpen(false);
+    setAssignInitials({
+      ...assignInitials,
+      assignedDoctor: { uid: editUid, doctor_uid: doctor_uid },
+    });
+    const res = await AssignDoctor({ token, editUid, doctor_uid });
+    // console.log(res.data);
+  };
+  const onAssignNurse = async (nurse_uid) => {
+    setAssignModalOpen(false);
+    setAssignInitials({
+      ...assignInitials,
+      assignedNurse: { uid: editUid, nurse_uid: nurse_uid },
+    });
+    const res = await AssignNurse({ token, editUid, nurse_uid });
+    console.log(res.data);
+  };
+  const onAssignRemote = async (mak_id) => {
+    setAssignModalOpen(false);
+    setAssignInitials({
+      ...assignInitials,
+      assignedRemote: { uid: editUid, mak_id: mak_id },
+    });
+    const res = await AssignRemote({ token, editUid, mak_id });
+    console.log(res.data);
+  };
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -213,38 +272,47 @@ const Bed = () => {
       title: "SL",
       dataIndex: "sl",
       key: "sl",
-      width: "10%",
+      width: "6%",
       render: (text) => <a>{text}</a>,
     },
     {
       title: "Bed",
       dataIndex: "bed",
       key: "bed",
-      width: "20%",
+      width: "14%",
       ...getColumnSearchProps("bed"),
     },
     {
       title: "Floor",
       dataIndex: "floor",
       key: "floor",
-      width: "25%",
+      width: "23%",
       ...getColumnSearchProps("floor"),
     },
     {
       title: "Ward",
       dataIndex: "ward",
       key: "ward",
-      width: "25%",
+      width: "23%",
       ...getColumnSearchProps("ward"),
     },
 
     {
       title: "Action",
       key: "action",
-      width: "20%",
+      width: "32%",
       // ...getColumnSearchProps('action'),
       render: (_, record) => (
-        <Space size="middle" style={{ margin: "0", padding: "0" }}>
+        <Space
+          size="middle"
+          style={{
+            margin: "0",
+            padding: "0",
+            flexWrap: "wrap",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
           {/* {console.log("record", record)} */}
           <Button
             onClick={() => handleEditButton(record)}
@@ -264,6 +332,26 @@ const Bed = () => {
               }}
             >
               <EditOutlined /> Edit
+            </Tag>
+          </Button>
+          <Button
+            onClick={() => handleAssignButton(record)}
+            style={{
+              border: "none",
+              padding: 0,
+              width: "fit-content",
+              minWidth: "60px",
+              outline: "none",
+            }}
+          >
+            <Tag
+              style={{
+                backgroundColor: "#87D068",
+                color: "white",
+                fontSize: "0.9rem",
+              }}
+            >
+              <CheckOutlined /> Assign
             </Tag>
           </Button>
           <Popconfirm
@@ -320,7 +408,8 @@ const Bed = () => {
     uid: item.uid,
     active: item.active,
   }));
-  // console.log("beds", JSON.stringify(bedData, undefined, 2));
+  console.log("beds", JSON.stringify(bedData, undefined, 2));
+  console.log(assignInitials);
   return (
     <Layout>
       <Header
@@ -338,6 +427,22 @@ const Bed = () => {
           onCancel={() => toggleEditModal(false)}
         >
           <EditBed onEditBed={onEditBed} initialVal={initialFormVal} />
+        </Modal>
+      )}
+      {assignModalOpen && (
+        <Modal
+          key={`a-${editUid}`}
+          open={() => assignModalOpen}
+          onOk={() => setAssignModalOpen(false)}
+          onCancel={() => setAssignModalOpen(false)}
+        >
+          <AssignToBed
+            onAssignPatient={onAssignPatient}
+            onAssignDoctor={onAssignDoctor}
+            onAssignNurse={onAssignNurse}
+            onAssignRemote={onAssignRemote}
+            initialAssignValues={assignInitials}
+          />
         </Modal>
       )}
     </Layout>

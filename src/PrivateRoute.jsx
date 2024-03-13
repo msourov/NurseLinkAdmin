@@ -4,8 +4,12 @@ import { isLoggedIn } from "./features/authentication/loginSlice";
 
 const PrivateRoute = () => {
   const isAuthenticated = useSelector(isLoggedIn);
-  // console.log(isAuthenticated);
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
+  console.log(isAuthenticated);
+  // return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+  return <Outlet />;
 };
 
 export default PrivateRoute;

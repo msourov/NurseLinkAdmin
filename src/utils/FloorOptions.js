@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { floorHelper } from "../actions/FloorHelper";
+import { floorHelper } from "../actions/HelperFunctions";
 
 const FloorOptions = () => {
   const [floorOptions, setFloorOptions] = useState([]);

@@ -4,12 +4,15 @@ import { useNavigate } from "react-router-dom";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
 import { useEffect, useState } from "react";
-import { CreateBed, CreateFloor, CreateWard } from "./Forms";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchWard, getWards } from "../features/wardSlice";
-
-// import { RoleForm } from "../pages/user_management/RoleForm";
-// import { UserForm } from "../pages/user_management/UserForm";
+import {
+  CreateBed,
+  CreateDoctor,
+  CreateFloor,
+  CreateNurseStation,
+  CreatePatient,
+  // CreatePatient,
+  CreateWard,
+} from "./Forms";
 
 function Header({
   headerRoutes: [firstLevel, secondLevel, thirdLevel],
@@ -89,6 +92,13 @@ const CreateModal = ({ page, triggerRerender }) => {
         {page === "floor" && <CreateFloor onCloseModal={handleCloseModal} />}
         {page === "ward" && <CreateWard onCloseModal={handleCloseModal} />}
         {page === "bed" && <CreateBed onCloseModal={handleCloseModal} />}
+        {page === "Nurse Station" && (
+          <CreateNurseStation onCloseModal={handleCloseModal} />
+        )}
+        {page === "Patient" && (
+          <CreatePatient onCloseModal={handleCloseModal} />
+        )}
+        {page === "Doctor" && <CreateDoctor onCloseModal={handleCloseModal} />}
         {/* {page === "role" && <RoleForm onCloseModal={handleCloseModal} />}
         {page === "user" && <UserForm onCloseModal={handleCloseModal} />} */}
       </Modal>

@@ -75,25 +75,23 @@ export const updateBed = createAsyncThunk(
     }
   }
 );
-// export const deleteFloor = createAsyncThunk(
-//   "floorSlice/deleteFloor",
-//   async ({ token, uid }) => {
-//     try {
-//       const response = await api(token).delete(
-//         `v1/margaret/floor/delete/${uid}`
-//       );
-//       if (response.status === 201) {
-//         message.success(response.data.message);
-//         return uid;
-//       } else {
-//         throw new Error("Failed to delete floor");
-//       }
-//     } catch (error) {
-//       console.error(error);
-//       throw error;
-//     }
-//   }
-// );
+export const deleteBed = createAsyncThunk(
+  "bedSlice/deleteBed",
+  async ({ token, uid }) => {
+    try {
+      const response = await api(token).delete(`v1/margaret/bed/delete/${uid}`);
+      if (response.status === 201) {
+        message.success(response.data.message);
+        return uid;
+      } else {
+        throw new Error("Failed to delete bed");
+      }
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+);
 
 export const bedSlice = createSlice({
   name: "bedSlice",
@@ -122,36 +120,34 @@ export const bedSlice = createSlice({
       .addCase(createBed.rejected, (state, action) => {
         state.status = "error";
         state.error = action.error.message;
+      })
+      .addCase(updateBed.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(updateBed.fulfilled, (state, action) => {
+        state.status = "idle";
+        const updateBedIndex = state.beds.findIndex(
+          (bed) => bed.uid === action.payload.uid
+        );
+        if (updateBedIndex !== -1) {
+          state.beds[updateBedIndex] = action.payload;
+        }
+      })
+      .addCase(updateBed.rejected, (state, action) => {
+        state.status = "error";
+        state.error = action.error.message;
+      })
+      .addCase(deleteBed.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(deleteBed.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.beds = state.beds.filter((bed) => bed.uid !== action.payload.uid);
+      })
+      .addCase(deleteBed.rejected, (state, action) => {
+        state.status = "error";
+        state.error = action.error.message;
       });
-    //   .addCase(updateFloor.pending, (state) => {
-    //     state.status = "loading";
-    //   })
-    //   .addCase(updateFloor.fulfilled, (state, action) => {
-    //     state.status = "idle";
-    //     const updateFloorIndex = state.floors.findIndex(
-    //       (floor) => floor.uid === action.payload.uid
-    //     );
-    //     if (updateFloorIndex !== -1) {
-    //       state.floors[updateFloorIndex] = action.payload;
-    //     }
-    //   })
-    //   .addCase(updateFloor.rejected, (state, action) => {
-    //     state.status = "error";
-    //     state.error = action.error.message;
-    //   })
-    //   .addCase(deleteFloor.pending, (state) => {
-    //     state.status = "loading";
-    //   })
-    //   .addCase(deleteFloor.fulfilled, (state, action) => {
-    //     state.status = "idle";
-    //     state.floors = state.floors.filter(
-    //       (floor) => floor.uid !== action.payload.uid
-    //     );
-    //   })
-    //   .addCase(deleteFloor.rejected, (state, action) => {
-    //     state.status = "error";
-    //     state.error = action.error.message;
-    //   });
   },
 });
 

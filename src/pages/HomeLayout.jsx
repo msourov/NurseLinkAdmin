@@ -127,8 +127,8 @@ const HomeLayout = () => {
           </Breadcrumb> */}
           <Content
             style={{
-              padding: 24,
-              margin: 0,
+              // padding: 24,
+              // margin: 0,
               minHeight: 280,
               background: colorBgContainer,
               borderRadius: borderRadiusLG,

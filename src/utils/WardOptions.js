@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { wardHelper } from "../actions/WardHelper";
+import { wardHelper } from "../actions/HelperFunctions";
 
 const WardOptions = () => {
   const [wardOptions, setWardOptions] = useState([]);
