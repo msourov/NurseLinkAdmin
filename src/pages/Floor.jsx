@@ -34,6 +34,15 @@ const Floor = () => {
   const token = useSelector((state) => state.login.token);
   // const store = useSelector((state) => state.floor);
 
+  useEffect(() => {
+    const getFloorData = async () => {
+      const response = await dispatch(fetchFloor(token));
+      setFloors(response.payload.data);
+    };
+    // console.log("floors", floors);
+    getFloorData();
+  }, [editModalOpen, triggerRerender]);
+
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -178,14 +187,6 @@ const Floor = () => {
         text
       ),
   });
-  useEffect(() => {
-    const getFloorData = async () => {
-      const response = await dispatch(fetchFloor(token));
-      setFloors(response.payload.data);
-    };
-    // console.log("floors", floors);
-    getFloorData();
-  }, [editModalOpen, triggerRerender]);
 
   const columns = [
     {

@@ -27,6 +27,7 @@ import RemoteOptions from "../utils/RemoteOptions";
 import { createDoctor } from "../features/doctorSlice";
 import { createPatient } from "../features/patientSlice";
 import dayjs from "dayjs";
+import { addNurseStation } from "../features/nurseStationSlice";
 
 export const CreateFloor = ({ onCloseModal }) => {
   const token = useSelector((state) => state.login.token);
@@ -680,42 +681,122 @@ export const EditBed = ({ onEditBed, initialVal }) => {
   );
 };
 
-export const CreateNurseStation = () => {
-  const onChange = (checkedValues) => {
-    console.log("checked = ", checkedValues);
+export const CreateNurseStation = ({ onCloseModal }) => {
+  const [selectedWardCabin, setSelectedWardCabin] = useState([]);
+  const dispatch = useDispatch();
+  const [form] = Form.useForm();
+  const layout = {
+    labelCol: {
+      span: 8,
+    },
+    wrapperCol: {
+      span: 16,
+    },
   };
+
+  const onChange = (checkedValues) => {
+    const selected = checkedValues.map((value) => {
+      const option = wardOptions.find((option) => option.value === value);
+      return { name: option.label, value: value };
+    });
+    setSelectedWardCabin(selected);
+  };
+
+  const onFinish = (values) => {
+    // console.log(JSON.stringify(values, undefined, 2));
+    const modifiedVal = values["ward_cabin"].map((val) => {
+      const selected = selectedWardCabin.find((item) => item.value === val);
+      return selected || val;
+    });
+    values.ward_cabin = modifiedVal;
+    try {
+      dispatch(addNurseStation(values));
+      onCloseModal();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const wardOptions = WardOptions();
   return (
-    <Checkbox.Group
+    <Form
+      form={form}
+      {...layout}
+      name="nest-messages"
+      onFinish={onFinish}
       style={{
-        width: "100%",
+        maxWidth: 600,
+        marginRight: "5em",
+        marginTop: "2em",
         display: "flex",
-        alignItems: "center",
+        flexDirection: "column",
       }}
-      // options={wardOptions}
-      onChange={onChange}
+      // align="left"
+      // validateMessages={validateMessages}
     >
-      <Row>
-        {wardOptions.map((item) => (
-          <Col span={8}>
-            {
-              <Checkbox value={item.value}>
-                <span
-                  style={{
-                    color:
-                      item.label.split(" ")[1] === "Ward"
-                        ? "#ff713a"
-                        : "#7dbbf0",
-                  }}
-                >
-                  {item.label}
-                </span>
-              </Checkbox>
-            }
-          </Col>
-        ))}
-      </Row>
-    </Checkbox.Group>
+      <Form.Item
+        name={["name"]}
+        label="Name"
+        rules={[
+          {
+            required: true,
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        name={["ward_cabin"]}
+        label="Select Ward/Cabin"
+        rules={[
+          {
+            required: true,
+            message: "Please select at least one ward/cabin.",
+          },
+        ]}
+      >
+        <Checkbox.Group
+          name="ward_cabin" // Set the name attribute to match the Form.Item's name
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+          }}
+          // options={wardOptions}
+          onChange={onChange}
+        >
+          <Row>
+            {wardOptions.map((item) => (
+              <Col span={8} key={item.value}>
+                <Checkbox value={item.value}>
+                  <span
+                    style={{
+                      color:
+                        item.label.split(" ")[1] === "Ward"
+                          ? "#ff713a"
+                          : "#7dbbf0",
+                    }}
+                  >
+                    {item.label}
+                  </span>
+                </Checkbox>
+              </Col>
+            ))}
+          </Row>
+        </Checkbox.Group>
+      </Form.Item>
+
+      <Form.Item
+        wrapperCol={{
+          ...layout.wrapperCol,
+          offset: 8,
+        }}
+      >
+        <Button type="primary" htmlType="submit">
+          Submit
+        </Button>
+      </Form.Item>
+    </Form>
   );
 };
 
@@ -1137,22 +1218,32 @@ export const CreatePatient = ({ onCloseModal }) => {
     },
   };
   const onFinish = async ({ name, age, gender, active }) => {
-    console.log(name, age, gender, datetime);
-    const res = await dispatch(
-      createPatient({ token, name, age, gender, active, datetime })
-    );
-    onCloseModal();
+    // console.log(name, age, gender, datetime);
+    try {
+      const res = await dispatch(
+        createPatient({ token, name, age, gender, active, datetime })
+      );
+      if (res.fulfilled) console.log("onFinish", res);
+      onCloseModal();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      form.resetFields();
+    }
   };
   const defaultValue = dayjs("2024-01-01");
   const onDatetimeChange = (_, dateStr) => {
     if (dateStr) {
-      // Check if dateStr is not null
-      const date = dayjs(dateStr).toISOString();
-      console.log("onChange:", date);
-      form.setFieldsValue({
-        datetime: date,
-      });
-      setDatetime(date);
+      const date = dayjs(dateStr);
+      if (dayjs(dateStr).isValid()) {
+        console.log("onChange:", date.toISOString());
+        form.setFieldsValue({
+          datetime: date,
+        });
+        setDatetime(date.toISOString());
+      } else {
+        console.warn("Invalid date selected.");
+      }
     }
   };
 
@@ -1191,6 +1282,7 @@ export const CreatePatient = ({ onCloseModal }) => {
           {
             required: true,
           },
+          { type: "number", message: "Please enter a valid integer for age." },
         ]}
       >
         <Input />

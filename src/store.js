@@ -14,12 +14,13 @@ import {
 import floorSlice from "./features/floorSlice";
 import wardSlice from "./features/wardSlice";
 import bedSlice from "./features/bedSlice";
+import nurseStationSlice from "./features/nurseStationSlice";
 
 const persistConfig = {
   key: "root",
   storage,
   // blacklist: ["", "", ] use blacklist for slices you don't want to persist
-  whitelist: ["login", "floor", "ward"],
+  whitelist: ["login", "floor", "ward", "nurseStation"],
 };
 
 const rootReducer = combineReducers({
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   floor: floorSlice,
   ward: wardSlice,
   bed: bedSlice,
+  nurseStation: nurseStationSlice,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

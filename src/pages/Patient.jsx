@@ -43,7 +43,7 @@ const Patient = () => {
       setPatients(response.payload.data);
     };
     getPatientData();
-  }, []);
+  }, [editModalOpen, triggerRerender]);
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -74,7 +74,7 @@ const Patient = () => {
     try {
       await dispatch(deletePatient({ token, uid }));
       setTriggerRerender((prev) => !prev);
-      useSelector((state) => state.patients);
+      // useSelector((state) => state.patients);
     } catch (error) {
       console.error("Error deleting patient:", error);
     }

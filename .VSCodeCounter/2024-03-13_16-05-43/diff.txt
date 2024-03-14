@@ -1,0 +1,56 @@
+Date : 2024-03-13 16:05:43
+Directory : e:\Projects\Office\nurselink-admin
+Total : 22 files,  1893 codes, 52 comments, 80 blanks, all 2025 lines
+
+Languages
++----------------+------------+------------+------------+------------+------------+
+| language       | files      | code       | comment    | blank      | total      |
++----------------+------------+------------+------------+------------+------------+
+| JavaScript JSX |          8 |      1,346 |         89 |         47 |      1,482 |
+| JavaScript     |         12 |        545 |        -37 |         33 |        541 |
+| JSON           |          2 |          2 |          0 |          0 |          2 |
++----------------+------------+------------+------------+------------+------------+
+
+Directories
++----------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                 | files      | code       | comment    | blank      | total      |
++----------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                    |         22 |      1,893 |         52 |         80 |      2,025 |
+| . (Files)                                                            |          2 |          2 |          0 |          0 |          2 |
+| src                                                                  |         20 |      1,891 |         52 |         80 |      2,023 |
+| src (Files)                                                          |          1 |          4 |          0 |          0 |          4 |
+| src\actions                                                          |          4 |        109 |          0 |          6 |        115 |
+| src\components                                                       |          2 |        624 |         50 |         23 |        697 |
+| src\features                                                         |          3 |        347 |        -42 |         12 |        317 |
+| src\pages                                                            |          5 |        718 |         39 |         24 |        781 |
+| src\utils                                                            |          5 |         89 |          5 |         15 |        109 |
++----------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++----------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| filename                                                             | language       | code       | comment    | blank      | total      |
++----------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| e:\Projects\Office\nurselink-admin\package-lock.json                 | JSON           |          1 |          0 |          0 |          1 |
+| e:\Projects\Office\nurselink-admin\package.json                      | JSON           |          1 |          0 |          0 |          1 |
+| e:\Projects\Office\nurselink-admin\src\PrivateRoute.jsx              | JavaScript JSX |          4 |          0 |          0 |          4 |
+| e:\Projects\Office\nurselink-admin\src\actions\AssignToBed.js        | JavaScript     |         66 |          0 |          3 |         69 |
+| e:\Projects\Office\nurselink-admin\src\actions\FloorHelper.js        | JavaScript     |        -12 |          0 |         -2 |        -14 |
+| e:\Projects\Office\nurselink-admin\src\actions\HelperFunctions.js    | JavaScript     |         67 |          0 |          7 |         74 |
+| e:\Projects\Office\nurselink-admin\src\actions\WardHelper.js         | JavaScript     |        -12 |          0 |         -2 |        -14 |
+| e:\Projects\Office\nurselink-admin\src\components\Forms.jsx          | JavaScript JSX |        612 |         51 |         24 |        687 |
+| e:\Projects\Office\nurselink-admin\src\components\Header.jsx         | JavaScript JSX |         12 |         -1 |         -1 |         10 |
+| e:\Projects\Office\nurselink-admin\src\features\bedSlice.js          | JavaScript     |         44 |        -48 |          0 |         -4 |
+| e:\Projects\Office\nurselink-admin\src\features\doctorSlice.js       | JavaScript     |        150 |          4 |          6 |        160 |
+| e:\Projects\Office\nurselink-admin\src\features\patientSlice.js      | JavaScript     |        153 |          2 |          6 |        161 |
+| e:\Projects\Office\nurselink-admin\src\pages\Bed.jsx                 | JavaScript JSX |        102 |          3 |          0 |        105 |
+| e:\Projects\Office\nurselink-admin\src\pages\Doctor.jsx              | JavaScript JSX |        302 |         11 |         12 |        325 |
+| e:\Projects\Office\nurselink-admin\src\pages\HomeLayout.jsx          | JavaScript JSX |         -2 |          2 |          0 |          0 |
+| e:\Projects\Office\nurselink-admin\src\pages\NurseStation.jsx        | JavaScript JSX |         10 |         16 |          1 |         27 |
+| e:\Projects\Office\nurselink-admin\src\pages\Patient.jsx             | JavaScript JSX |        306 |          7 |         11 |        324 |
+| e:\Projects\Office\nurselink-admin\src\utils\DoctorOptions.js        | JavaScript     |         22 |          2 |          4 |         28 |
+| e:\Projects\Office\nurselink-admin\src\utils\NurseOptions.js         | JavaScript     |         23 |          1 |          4 |         28 |
+| e:\Projects\Office\nurselink-admin\src\utils\PatientOptions.js       | JavaScript     |         22 |          1 |          4 |         27 |
+| e:\Projects\Office\nurselink-admin\src\utils\PopulateEditWardForm.js | JavaScript     |          0 |          0 |         -1 |         -1 |
+| e:\Projects\Office\nurselink-admin\src\utils\RemoteOptions.js        | JavaScript     |         22 |          1 |          4 |         27 |
+| Total                                                                |                |      1,893 |         52 |         80 |      2,025 |
++----------------------------------------------------------------------+----------------+------------+------------+------------+------------+

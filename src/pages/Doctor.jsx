@@ -209,20 +209,20 @@ const Doctor = () => {
       width: "35%",
       ...getColumnSearchProps("name"),
     },
-    {
-      title: "Mobile No",
-      dataIndex: "phone",
-      key: "phone",
-      width: "25%",
-      render: (phone) => <a>{phone}</a>,
-    },
-    {
-      title: "Department",
-      dataIndex: "department",
-      key: "department",
-      width: "35%",
-      ...getColumnSearchProps("department"),
-    },
+    // {
+    //   title: "Mobile No",
+    //   dataIndex: "phone",
+    //   key: "phone",
+    //   width: "25%",
+    //   render: (phone) => <a>{phone}</a>,
+    // },
+    // {
+    //   title: "Department",
+    //   dataIndex: "department",
+    //   key: "department",
+    //   width: "35%",
+    //   ...getColumnSearchProps("department"),
+    // },
 
     {
       title: "Action",
