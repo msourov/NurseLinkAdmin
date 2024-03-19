@@ -21,8 +21,14 @@ export const fetchWard = createAsyncThunk(
         throw new Error("Failed to fetch wards");
       }
     } catch (error) {
-      console.error(error);
-      throw error;
+      if (error?.response?.status === 400 || 404) {
+        message.error(error?.response?.data.message);
+      }
+      if (error?.response?.status === 401 || 403) {
+        message.error(error?.response?.data.message);
+        localStorage.clear();
+        // navigate("/login");
+      }
     }
   }
 );
@@ -48,8 +54,9 @@ export const createWard = createAsyncThunk(
         throw new Error("Failed to create Ward");
       }
     } catch (error) {
-      message.error(error?.response?.data?.message);
-      throw error;
+      if (error?.response?.status === 400 || 404) {
+        message.error(error?.response?.data?.message);
+      }
     }
   }
 );
@@ -72,9 +79,9 @@ export const updateWard = createAsyncThunk(
         throw new Error("Failed to update ward");
       }
     } catch (error) {
-      // console.log(error.response);
-      message.error(error?.response?.data?.message);
-      throw error;
+      if (error?.response?.status === 400 || 404) {
+        message.error(error?.response?.data?.message);
+      }
     }
   }
 );
@@ -93,8 +100,9 @@ export const deleteWard = createAsyncThunk(
         throw new Error("Failed to delete ward");
       }
     } catch (error) {
-      console.error(error);
-      throw error;
+      if (error?.res?.status === 400 || 404) {
+        message.error(error?.response?.data?.message);
+      }
     }
   }
 );

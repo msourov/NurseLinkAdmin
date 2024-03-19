@@ -57,6 +57,12 @@ const items = [
     label: "Patient",
     link: "/patient",
   },
+  {
+    key: "remote",
+    icon: <IconGenerator style={{ marginBlock: "center" }} props={"remote"} />,
+    label: "Remote",
+    link: "/remote",
+  },
 ];
 
 const HomeLayout = () => {

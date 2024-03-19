@@ -10,6 +10,7 @@ import {
   CreateFloor,
   CreateNurseStation,
   CreatePatient,
+  CreateRemote,
   // CreatePatient,
   CreateWard,
 } from "./Forms";
@@ -99,6 +100,7 @@ const CreateModal = ({ page, triggerRerender }) => {
           <CreatePatient onCloseModal={handleCloseModal} />
         )}
         {page === "Doctor" && <CreateDoctor onCloseModal={handleCloseModal} />}
+        {page === "Remote" && <CreateRemote onCloseModal={handleCloseModal} />}
         {/* {page === "role" && <RoleForm onCloseModal={handleCloseModal} />}
         {page === "user" && <UserForm onCloseModal={handleCloseModal} />} */}
       </Modal>

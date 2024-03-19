@@ -8,20 +8,28 @@ const initialState = {
   error: null,
 };
 
-export const fetchBed = createAsyncThunk("bedSlice/fetchBed", async (token) => {
-  try {
-    const response = await api(token).get("v1/margaret/bed/all");
-    if (response.status === 200) {
-      return response.data;
-    } else {
-      throw new Error("Failed to fetch bed");
+export const fetchBed = createAsyncThunk(
+  "bedSlice/fetchBed",
+  async (token, dispatch) => {
+    try {
+      const response = await api(token).get("v1/margaret/bed/all");
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        throw new Error("Failed to fetch bed");
+      }
+    } catch (error) {
+      if (error?.response?.status === 400 || 404) {
+        message.error(error?.response?.data.message);
+      }
+      if (error?.response?.status === 401 || 403) {
+        message.error(error?.response?.data.message);
+        localStorage.clear();
+        dispatch(logout());
+      }
     }
-  } catch (error) {
-    console.error(error);
-    message.error(error?.response?.data?.message);
-    throw error;
   }
-});
+);
 export const createBed = createAsyncThunk(
   "bedSlice/createBed",
   async ({ token, values }) => {
@@ -41,8 +49,9 @@ export const createBed = createAsyncThunk(
         throw new Error("Failed to create bed");
       }
     } catch (error) {
-      message.error(error?.response?.data?.message);
-      throw error;
+      if (error?.response?.status === 400 || 404) {
+        message.error(error?.response?.data?.message);
+      }
     }
   }
 );
@@ -69,9 +78,9 @@ export const updateBed = createAsyncThunk(
         throw new Error("Failed to update bed");
       }
     } catch (error) {
-      // console.log(error.response);
-      message.error(error?.response?.data?.message);
-      throw error;
+      if (error?.response?.status === 400 || 404) {
+        message.error(error?.response?.data?.message);
+      }
     }
   }
 );
@@ -87,8 +96,9 @@ export const deleteBed = createAsyncThunk(
         throw new Error("Failed to delete bed");
       }
     } catch (error) {
-      console.error(error);
-      throw error;
+      if (error?.res?.status === 400 || 404) {
+        message.error(error?.response?.data?.message);
+      }
     }
   }
 );

@@ -20,8 +20,14 @@ export const fetchDoctor = createAsyncThunk(
         throw new Error("Failed to fetch doctor");
       }
     } catch (error) {
-      console.error(error);
-      throw error;
+      if (error?.response?.status === 400 || 404) {
+        message.error(error?.response?.data.message);
+      }
+      if (error?.response?.status === 401 || 403) {
+        message.error(error?.response?.data.message);
+        localStorage.clear();
+        // navigate("/login");
+      }
     }
   }
 );
@@ -43,8 +49,9 @@ export const createDoctor = createAsyncThunk(
         throw new Error("Failed to create doctor");
       }
     } catch (error) {
-      message.error(error?.response?.data?.message);
-      throw error;
+      if (error?.response?.status === 400 || 404) {
+        message.error(error?.response?.data?.message);
+      }
     }
   }
 );
@@ -69,9 +76,9 @@ export const updateDoctor = createAsyncThunk(
         throw new Error("Failed to update doctor");
       }
     } catch (error) {
-      // console.log(error.response);
-      message.error(error?.response?.data?.message);
-      throw error;
+      if (error?.response?.status === 400 || 404) {
+        message.error(error?.response?.data?.message);
+      }
     }
   }
 );
@@ -89,8 +96,9 @@ export const deleteDoctor = createAsyncThunk(
         throw new Error("Failed to delete doctor");
       }
     } catch (error) {
-      console.error(error);
-      throw error;
+      if (error?.res?.status === 400 || 404) {
+        message.error(error?.response?.data?.message);
+      }
     }
   }
 );

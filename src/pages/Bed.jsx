@@ -74,8 +74,6 @@ const Bed = () => {
 
   // This function prepopulates the bed edit form with previous values.
   const createInitialValues = (record) => {
-    // console.log("beds inside edit", beds);
-    console.log("wardOptions", JSON.stringify(wardOptions, undefined, 2));
     const { value: floorValue, label: floorLabel } = floorOptions.find(
       (item) => item.value === record.floor_uid
     );
@@ -88,7 +86,6 @@ const Bed = () => {
       name: record.bed,
       active: record.active,
     };
-    console.log("initial obj", obj);
     setInitialFormVal(obj);
   };
 
@@ -105,7 +102,6 @@ const Bed = () => {
   };
 
   const handleDelete = async (uid) => {
-    console.log(uid);
     try {
       await dispatch(deleteBed({ token, uid }));
       setTriggerRerender((prev) => !prev);
@@ -127,7 +123,6 @@ const Bed = () => {
       assignedPatient: { uid: editUid, patient_uid: patient_uid },
     });
     const res = await AssignPatient({ token, editUid, patient_uid });
-    // console.log(res.data);
   };
   const onAssignDoctor = async (doctor_uid) => {
     setAssignModalOpen(false);
@@ -136,7 +131,6 @@ const Bed = () => {
       assignedDoctor: { uid: editUid, doctor_uid: doctor_uid },
     });
     const res = await AssignDoctor({ token, editUid, doctor_uid });
-    // console.log(res.data);
   };
   const onAssignNurse = async (nurse_uid) => {
     setAssignModalOpen(false);
@@ -145,7 +139,6 @@ const Bed = () => {
       assignedNurse: { uid: editUid, nurse_uid: nurse_uid },
     });
     const res = await AssignNurse({ token, editUid, nurse_uid });
-    console.log(res.data);
   };
   const onAssignRemote = async (mak_id) => {
     setAssignModalOpen(false);
@@ -154,7 +147,6 @@ const Bed = () => {
       assignedRemote: { uid: editUid, mak_id: mak_id },
     });
     const res = await AssignRemote({ token, editUid, mak_id });
-    console.log(res.data);
   };
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
@@ -260,10 +252,9 @@ const Bed = () => {
   });
   useEffect(() => {
     const getBedData = async () => {
-      const response = await dispatch(fetchBed(token));
+      const response = await dispatch(fetchBed(token, dispatch));
       setBeds(response.payload.data);
     };
-    // console.log("beds", beds);
     getBedData();
   }, [editModalOpen, triggerRerender]);
 
@@ -313,7 +304,6 @@ const Bed = () => {
             justifyContent: "center",
           }}
         >
-          {/* {console.log("record", record)} */}
           <Button
             onClick={() => handleEditButton(record)}
             style={{
@@ -388,8 +378,6 @@ const Bed = () => {
     },
   ];
 
-  // console.log("floorOptions", floorOptions);
-  // console.log("wardoptions", wardOptions);
   const sortedBeds = [...beds].sort((a, b) => a.id - b.id);
   const bedData = sortedBeds?.map((item, index) => ({
     key: item.id,
@@ -408,8 +396,7 @@ const Bed = () => {
     uid: item.uid,
     active: item.active,
   }));
-  console.log("beds", JSON.stringify(bedData, undefined, 2));
-  console.log(assignInitials);
+
   return (
     <Layout>
       <Header

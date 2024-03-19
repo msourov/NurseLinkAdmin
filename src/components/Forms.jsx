@@ -28,6 +28,8 @@ import { createDoctor } from "../features/doctorSlice";
 import { createPatient } from "../features/patientSlice";
 import dayjs from "dayjs";
 import { addNurseStation } from "../features/nurseStationSlice";
+import { assignRemote, createRemote } from "../features/remoteSlice";
+import BedOptions from "../utils/BedOptions";
 
 export const CreateFloor = ({ onCloseModal }) => {
   const token = useSelector((state) => state.login.token);
@@ -1406,6 +1408,145 @@ export const EditPatient = ({ onEditPatient, initialValues }) => {
       >
         <Input />
       </Form.Item>
+      <Form.Item
+        wrapperCol={{
+          ...layout.wrapperCol,
+          offset: 8,
+        }}
+      >
+        <Button type="primary" htmlType="submit">
+          Submit
+        </Button>
+      </Form.Item>
+    </Form>
+  );
+};
+
+export const CreateRemote = ({ onCloseModal }) => {
+  const token = useSelector((state) => state.login.token);
+  const [form] = Form.useForm();
+  const dispatch = useDispatch();
+  const layout = {
+    labelCol: {
+      span: 8,
+    },
+    wrapperCol: {
+      span: 16,
+    },
+  };
+  const onFinish = async ({ name, mak_id, active }) => {
+    console.log(name, mak_id, active);
+    const res = await dispatch(createRemote({ token, name, mak_id, active }));
+    onCloseModal();
+  };
+  return (
+    <Form
+      form={form}
+      {...layout}
+      name="nest-messages"
+      onFinish={onFinish}
+      style={{
+        maxWidth: 600,
+        marginRight: "5em",
+        marginTop: "2em",
+        display: "flex",
+        flexDirection: "column",
+      }}
+      // align="left"
+      // validateMessages={validateMessages}
+    >
+      {/* name, floor_no, active, uid */}
+      <Form.Item
+        name={["name"]}
+        label="Name"
+        rules={[
+          {
+            required: true,
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        name={["mak_id"]}
+        label="Mak ID"
+        rules={[
+          {
+            required: true,
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item name="active" label="Active">
+        <Switch
+          checkedChildren="true"
+          unCheckedChildren="false"
+          // onChange={onSwitchChange}
+          style={{ boxShadow: "none", borderColor: "#d9d9d9" }}
+        />
+      </Form.Item>
+      <Form.Item
+        wrapperCol={{
+          ...layout.wrapperCol,
+          offset: 8,
+        }}
+      >
+        <Button type="primary" htmlType="submit">
+          Submit
+        </Button>
+      </Form.Item>
+    </Form>
+  );
+};
+
+export const AssignRemoteToBed = ({ makId, onCloseModal }) => {
+  const token = useSelector((state) => state.login.token);
+  const [form] = Form.useForm();
+  const dispatch = useDispatch();
+  const layout = {
+    labelCol: {
+      span: 8,
+    },
+    wrapperCol: {
+      span: 16,
+    },
+  };
+  const onFinish = async ({ bed }) => {
+    console.log("bed", bed);
+    const res = await dispatch(assignRemote({ token, bed, makId }));
+    onCloseModal();
+  };
+  console.log("BedOptions()", BedOptions());
+  return (
+    <Form
+      form={form}
+      {...layout}
+      name="nest-messages"
+      onFinish={onFinish}
+      style={{
+        maxWidth: 600,
+        marginRight: "5em",
+        marginTop: "2em",
+        display: "flex",
+        flexDirection: "column",
+      }}
+      // align="left"
+      // validateMessages={validateMessages}
+    >
+      {/* name, floor_no, active, uid */}
+      <Form.Item
+        name={["bed"]}
+        label="Bed"
+        rules={[
+          {
+            required: true,
+          },
+        ]}
+      >
+        <Select style={{ width: 120 }} options={BedOptions()} />
+      </Form.Item>
+
       <Form.Item
         wrapperCol={{
           ...layout.wrapperCol,

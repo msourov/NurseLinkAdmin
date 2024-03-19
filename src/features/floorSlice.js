@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../actions/api";
 import { message } from "antd";
+import { logout } from "./authentication/loginSlice";
 
 const initialState = {
   floors: [],
@@ -10,7 +11,7 @@ const initialState = {
 
 export const fetchFloor = createAsyncThunk(
   "floorSlice/fetchFloor",
-  async (token) => {
+  async (token, dispatch) => {
     try {
       const response = await api(token).get("v1/margaret/floor/all");
       if (response.status === 200) {
@@ -20,8 +21,14 @@ export const fetchFloor = createAsyncThunk(
         throw new Error("Failed to fetch floor");
       }
     } catch (error) {
-      console.error(error);
-      throw error;
+      if (error?.response?.status === 400 || 404) {
+        message.error(error?.response?.data.message);
+      }
+      if (error?.response?.status === 401 || 403) {
+        message.error(error?.response?.data.message);
+        localStorage.clear();
+        dispatch(logout());
+      }
     }
   }
 );
@@ -43,8 +50,9 @@ export const createFloor = createAsyncThunk(
         throw new Error("Failed to create floor");
       }
     } catch (error) {
-      message.error(error?.response?.data?.message);
-      throw error;
+      if (error?.response?.status === 400 || 404) {
+        message.error(error?.response?.data?.message);
+      }
     }
   }
 );
@@ -69,9 +77,9 @@ export const updateFloor = createAsyncThunk(
         throw new Error("Failed to update floor");
       }
     } catch (error) {
-      // console.log(error.response);
-      message.error(error?.response?.data?.message);
-      throw error;
+      if (error?.response?.status === 400 || 404) {
+        message.error(error?.response?.data?.message);
+      }
     }
   }
 );
@@ -89,8 +97,9 @@ export const deleteFloor = createAsyncThunk(
         throw new Error("Failed to delete floor");
       }
     } catch (error) {
-      console.error(error);
-      throw error;
+      if (error?.res?.status === 400 || 404) {
+        message.error(error?.response?.data?.message);
+      }
     }
   }
 );

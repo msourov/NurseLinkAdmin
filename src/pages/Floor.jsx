@@ -33,10 +33,9 @@ const Floor = () => {
   const searchInput = useRef(null);
   const token = useSelector((state) => state.login.token);
   // const store = useSelector((state) => state.floor);
-
   useEffect(() => {
     const getFloorData = async () => {
-      const response = await dispatch(fetchFloor(token));
+      const response = await dispatch(fetchFloor(token, dispatch));
       setFloors(response.payload.data);
     };
     // console.log("floors", floors);

@@ -9,6 +9,7 @@ import {
   Tag,
 } from "antd";
 import {
+  CheckOutlined,
   DeleteOutlined,
   EditOutlined,
   SearchOutlined,
@@ -16,34 +17,22 @@ import {
 import Highlighter from "react-highlight-words";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  deletePatient,
-  fetchPatient,
-  updatePatient,
-} from "../features/patientSlice";
 import Header from "../components/Header";
-import { EditPatient } from "../components/Forms";
+import { fetchRemote, updateRemote } from "../features/remoteSlice";
+import { AssignRemoteToBed } from "../components/Forms";
 
-const Patient = () => {
+const Remote = () => {
   const dispatch = useDispatch();
-  const [patients, setPatients] = useState([]);
+  const [remotes, setRemotes] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [editUid, setEditUid] = useState(null);
+  const [assignModalOpen, setAssignModalOpen] = useState(false);
+  const [makId, setMakId] = useState(null);
   const [initialFormVal, setInitialFormVal] = useState({});
   const [triggerRerender, setTriggerRerender] = useState(false);
   const searchInput = useRef(null);
   const token = useSelector((state) => state.login.token);
-  // const store = useSelector((state) => state.patient);
-
-  useEffect(() => {
-    const getPatientData = async () => {
-      const response = await dispatch(fetchPatient(token, dispatch));
-      setPatients(response.payload.data);
-    };
-    getPatientData();
-  }, [editModalOpen, triggerRerender]);
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -56,6 +45,7 @@ const Patient = () => {
   };
 
   const renderTrigger = () => {
+    // This is to cause rerender after an operation.
     setTriggerRerender((prev) => !prev);
   };
 
@@ -63,27 +53,31 @@ const Patient = () => {
     setEditModalOpen(bool);
   };
 
-  const handleEditButton = async (record) => {
-    console.log("handleEdit", record);
-    setEditUid(record.uid);
-    setInitialFormVal(record);
-    toggleEditModal(true);
+  // record contains all the information about the bed clicked to edit.
+  // const handleEditButton = async (record) => {
+  //   setEditUid(record.uid);
+  //   createInitialValues(record);
+  //   toggleEditModal(true);
+  // };
+
+  const handleAssignButton = async (record) => {
+    console.log("record", record);
+    setMakId(record.mak_id);
+    setAssignModalOpen(true);
   };
 
-  const handleDelete = async (uid) => {
-    try {
-      await dispatch(deletePatient({ token, uid }));
-      setTriggerRerender((prev) => !prev);
-      // useSelector((state) => state.patients);
-    } catch (error) {
-      console.error("Error deleting patient:", error);
-    }
-  };
+  // const handleDelete = async (uid) => {
+  //   try {
+  //     await dispatch(deleteBed({ token, uid }));
+  //     setTriggerRerender((prev) => !prev);
+  //     useSelector((state) => state.beds);
+  //   } catch (error) {
+  //     console.error("Error deleting bed:", error);
+  //   }
+  // };
 
-  const onEditPatient = async ({ name, age, uid }) => {
-    // setInitialFormVal(values);
-    console.log("values", name, age, uid);
-    dispatch(updatePatient({ token, name, age, uid, toggleEditModal }));
+  const onEditRemote = async (values) => {
+    dispatch(updateRemote({ token, values, editUid, toggleEditModal }));
     // toggleEditModal(false);
   };
 
@@ -189,49 +183,53 @@ const Patient = () => {
         text
       ),
   });
+  useEffect(() => {
+    const getRemoteData = async () => {
+      const response = await dispatch(fetchRemote(token, dispatch));
+      console.log("response", response);
+      setRemotes(response.payload.data);
+    };
+    getRemoteData();
+  }, [editModalOpen, triggerRerender]);
 
   const columns = [
     {
       title: "SL",
       dataIndex: "sl",
       key: "sl",
-      width: "10%",
+      width: "6%",
       render: (text) => <a>{text}</a>,
     },
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      width: "25%",
+      width: "14%",
       ...getColumnSearchProps("name"),
     },
     {
-      title: "Age",
-      dataIndex: "age",
-      key: "age",
-      width: "10%",
-    },
-    {
-      title: "Gender",
-      dataIndex: "gender",
-      key: "gender",
-      width: "15%",
-      // ...getColumnSearchProps("gender"),
-    },
-    {
-      title: "Admission Date",
-      dataIndex: "admission_date",
-      key: "admission_date",
-      width: "20%",
+      title: "Mak_ID",
+      dataIndex: "mak_id",
+      key: "mak_id",
+      width: "23%",
+      ...getColumnSearchProps("mak_id"),
     },
     {
       title: "Action",
       key: "action",
-      width: "30%",
+      width: "32%",
       // ...getColumnSearchProps('action'),
       render: (_, record) => (
-        <Space size="middle" style={{ margin: "0", padding: "0" }}>
-          {/* {console.log("record", record)} */}
+        <Space
+          size="middle"
+          style={{
+            margin: "0",
+            padding: "0",
+            flexWrap: "wrap",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
           <Button
             onClick={() => handleEditButton(record)}
             style={{
@@ -252,6 +250,26 @@ const Patient = () => {
               <EditOutlined /> Edit
             </Tag>
           </Button>
+          <Button
+            onClick={() => handleAssignButton(record)}
+            style={{
+              border: "none",
+              padding: 0,
+              width: "fit-content",
+              minWidth: "60px",
+              outline: "none",
+            }}
+          >
+            <Tag
+              style={{
+                backgroundColor: "#87D068",
+                color: "white",
+                fontSize: "0.9rem",
+              }}
+            >
+              <CheckOutlined /> Assign
+            </Tag>
+          </Button>
           <Popconfirm
             title=""
             description="Are you sure?"
@@ -260,7 +278,6 @@ const Patient = () => {
             onConfirm={() => handleDelete(record.uid)}
           >
             <Button
-              // onClick={() => handleDelete(record.uid)}
               style={{
                 margin: 0,
                 border: "none",
@@ -285,28 +302,25 @@ const Patient = () => {
       ),
     },
   ];
-
-  const sortedPatients = [...patients].sort((a, b) => a.id - b.id);
-  const patientData = sortedPatients?.map((item, index) => ({
+  const remoteData = remotes?.map((item, index) => ({
     key: item.id,
     sl: index,
     name: item.name,
-    age: item.age,
-    gender: item.gender,
+    mak_id: item.mak_id,
     uid: item.uid,
-    admission_date: item.admission_date,
   }));
+  console.log("remoteData", remoteData);
   return (
     <Layout>
       <Header
-        headerRoutes={["Home", "Patient"]}
-        titles={["Patient", "Home"]}
-        page="Patient"
+        headerRoutes={["Home", "Remote"]}
+        titles={["Remote", "Home"]}
+        page="Remote"
         triggerRender={renderTrigger}
       />
       <Table
         columns={columns}
-        dataSource={patientData}
+        dataSource={remoteData}
         style={{ margin: "0px" }}
       />
       {editModalOpen && (
@@ -316,9 +330,19 @@ const Patient = () => {
           onOk={() => toggleEditModal(false)}
           onCancel={() => toggleEditModal(false)}
         >
-          <EditPatient
-            onEditPatient={onEditPatient}
-            initialValues={initialFormVal}
+          <EditBed onEditBed={onEditremote} initialVal={initialFormVal} />
+        </Modal>
+      )}
+      {assignModalOpen && (
+        <Modal
+          key={`a-${makId}`}
+          open={() => assignModalOpen}
+          onOk={() => setAssignModalOpen(false)}
+          onCancel={() => setAssignModalOpen(false)}
+        >
+          <AssignRemoteToBed
+            makId={makId}
+            onCloseModal={() => setAssignModalOpen(false)}
           />
         </Modal>
       )}
@@ -326,4 +350,4 @@ const Patient = () => {
   );
 };
 
-export default Patient;
+export default Remote;

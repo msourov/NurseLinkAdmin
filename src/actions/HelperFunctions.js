@@ -71,3 +71,15 @@ export const remoteHelper = async (token) => {
     throw error;
   }
 };
+
+export const bedHelper = async (token) => {
+  try {
+    const response = await api(token).get("v1/margaret/bed/helper");
+    if (response.status === 200) {
+      return response.data;
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

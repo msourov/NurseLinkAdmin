@@ -10,7 +10,7 @@ const initialState = {
 
 export const fetchPatient = createAsyncThunk(
   "patientSlice/fetchPatient",
-  async (token) => {
+  async (token, dispatch) => {
     try {
       const response = await api(token).get("v1/margaret/patient/all");
       if (response.status === 200) {
@@ -20,8 +20,14 @@ export const fetchPatient = createAsyncThunk(
       }
     } catch (error) {
       console.error(error);
-      message.error(error?.response?.data?.message);
-      throw error;
+      if (error?.response?.status === 400 || 404) {
+        message.error(error?.response?.data.message);
+      }
+      if (error?.response?.status === 401 || 403) {
+        message.error(error?.response?.data.message);
+        localStorage.clear();
+        dispatch(logout());
+      }
     }
   }
 );
@@ -45,8 +51,9 @@ export const createPatient = createAsyncThunk(
         throw new Error("Failed to create patient");
       }
     } catch (error) {
-      message.error(error?.response?.data?.message);
-      throw error;
+      if (error?.response?.status === 400 || 404) {
+        message.error(error?.response?.data?.message);
+      }
     }
   }
 );
@@ -70,9 +77,9 @@ export const updatePatient = createAsyncThunk(
         throw new Error("Failed to update patient");
       }
     } catch (error) {
-      // console.log(error.response);
-      message.error(error?.response?.data?.message);
-      throw error;
+      if (error?.response?.status === 400 || 404) {
+        message.error(error?.response?.data?.message);
+      }
     }
   }
 );
@@ -90,8 +97,9 @@ export const deletePatient = createAsyncThunk(
         throw new Error("Failed to delete patient");
       }
     } catch (error) {
-      console.error(error);
-      throw error;
+      if (error?.res?.status === 400 || 404) {
+        message.error(error?.response?.data?.message);
+      }
     }
   }
 );
