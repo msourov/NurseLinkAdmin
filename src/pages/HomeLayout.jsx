@@ -1,9 +1,8 @@
-import { Breadcrumb, Button, Layout, Menu, theme } from "antd";
+import { Button, Layout, Menu, theme } from "antd";
 import IconGenerator from "../components/IconGenerator";
 import { Outlet, useNavigate } from "react-router-dom";
-import Link from "antd/es/typography/Link";
 import { useDispatch } from "react-redux";
-import loginSlice, { logout } from "../features/authentication/loginSlice";
+import { logout } from "../features/authentication/loginSlice";
 import { CopyrightCircleOutlined } from "@ant-design/icons";
 import { Footer } from "antd/es/layout/layout";
 const { Header, Content, Sider } = Layout;

@@ -18,7 +18,11 @@ import Highlighter from "react-highlight-words";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Header from "../components/Header";
-import { fetchRemote, updateRemote } from "../features/remoteSlice";
+import {
+  deleteRemote,
+  fetchRemote,
+  updateRemote,
+} from "../features/remoteSlice";
 import { AssignRemoteToBed } from "../components/Forms";
 
 const Remote = () => {
@@ -66,15 +70,15 @@ const Remote = () => {
     setAssignModalOpen(true);
   };
 
-  // const handleDelete = async (uid) => {
-  //   try {
-  //     await dispatch(deleteBed({ token, uid }));
-  //     setTriggerRerender((prev) => !prev);
-  //     useSelector((state) => state.beds);
-  //   } catch (error) {
-  //     console.error("Error deleting bed:", error);
-  //   }
-  // };
+  const handleDelete = async (uid) => {
+    try {
+      await dispatch(deleteRemote({ token, uid }));
+      setTriggerRerender((prev) => !prev);
+      useSelector((state) => state.remotes);
+    } catch (error) {
+      console.error("Error deleting bed:", error);
+    }
+  };
 
   const onEditRemote = async (values) => {
     dispatch(updateRemote({ token, values, editUid, toggleEditModal }));
@@ -231,26 +235,6 @@ const Remote = () => {
           }}
         >
           <Button
-            onClick={() => handleEditButton(record)}
-            style={{
-              border: "none",
-              padding: 0,
-              width: "fit-content",
-              minWidth: "60px",
-              outline: "none",
-            }}
-          >
-            <Tag
-              style={{
-                backgroundColor: "#87D068",
-                color: "white",
-                fontSize: "0.9rem",
-              }}
-            >
-              <EditOutlined /> Edit
-            </Tag>
-          </Button>
-          <Button
             onClick={() => handleAssignButton(record)}
             style={{
               border: "none",
@@ -323,16 +307,7 @@ const Remote = () => {
         dataSource={remoteData}
         style={{ margin: "0px" }}
       />
-      {editModalOpen && (
-        <Modal
-          key={`e-${editUid}`}
-          open={() => editModalOpen}
-          onOk={() => toggleEditModal(false)}
-          onCancel={() => toggleEditModal(false)}
-        >
-          <EditBed onEditBed={onEditremote} initialVal={initialFormVal} />
-        </Modal>
-      )}
+
       {assignModalOpen && (
         <Modal
           key={`a-${makId}`}
